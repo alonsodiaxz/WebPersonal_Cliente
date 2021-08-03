@@ -1,0 +1,76 @@
+@import "../../../scss/index.scss";
+
+.sign-in {
+  background-image: url("../../../assets/img/png/background-v1.jpg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  &__content {
+    display: flex; //Item de una interfaz, mejorar a distribuirlos y alienarlos
+    flex-direction: column; //Le decimos que se ponga en las columnas no el las filas.
+    align-items: center; //Una vez hemos creado el flexbox le decimos que queremos los items alineados en el centro.
+    min-height: 100vh; //Hace que se distribuya por toda la pantalla
+
+    &-logo {
+      padding: 60px 20px;
+      img {
+        width: 100%;
+      }
+    }
+
+    &-tabs {
+      background-color: $background-light;
+      .ant-tabs {
+        width: 90vh; //View Heigth
+        @media (min-width: $media-breackpoint-up-lg) {
+          //Si el min-width es del tamaño de esa variable se pone automatica, sino de 90 vh
+          width: auto;
+        }
+      }
+      .ant-tabs-nav-container {
+        height: 60px !important; //El important es para poder sobreescribirlo
+      }
+      .ant-tabs-nav {
+        width: 100%;
+      }
+      .ant-tabs-tab {
+        width: 50px;
+        height: 60px !important;
+        text-align: center;
+        font-size: 0em + 19px / $defaultFontSize;
+        border-top: 4px solid $border-grey !important;
+        border-radius: 0 !important;
+        margin: 0px !important;
+        @media (min-width: $media-breackpoint-up-lg) {
+          width: 220px;
+          font-size: 0em + 23px / $defaultFontSize;
+        }
+
+        &:hover {
+          //Cuando estes encima del elemento
+          color: $font-grey-dark;
+        }
+        &:before {
+          content: none;
+        }
+        span {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      .ant-tabs-tab-active {
+        color: $primary-color !important;
+        border-top: 4px solid $primary-color !important;
+        border-radius: 0 !important;
+        border-right: 0 !important;
+        border-left: 0 !important;
+      }
+      .ant-tabs-content {
+        padding: 0 16px 16px 16px;
+        text-align: center;
+      }
+    }
+  }
+}

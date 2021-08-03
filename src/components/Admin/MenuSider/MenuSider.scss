@@ -1,0 +1,9 @@
+@import "../../../scss/index.scss";
+
+.admin-sider {
+  position: fixed;
+  margin-top: 60px;
+  left: 0;
+  height: 100vh;
+  overflow: auto;
+}
