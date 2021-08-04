@@ -6,9 +6,11 @@
 
 .login-form {
   background-color: white;
+  text-align: left;
 
   //Solo el último elemento tiene margin 0 => last-of-type
-  .ant-form-item:last-of-type {
+  .ant-form-item:last-of-type,
+  :nth-child(2) {
     margin: 0;
   }
 
