@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import { Layout, Tabs } from "antd";
-import { Redirect } from "react-router-dom";
 import Logo from "../../../assets/img/png/LABM.png";
 import "./SignIn.scss";
 import RegisterForm from "../../../components/Admin/RegisterForm/RegisterForm";

@@ -1,24 +1,12 @@
 import React, { useState } from "react";
-import {
-  Layout,
-  Form,
-  InputNumber,
-  Button,
-  Checkbox,
-  notification,
-  Input,
-  DatePicker,
-  Switch,
-} from "antd";
+import { Form, Button, Checkbox, notification, Input } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import {
   emailValidation,
   minLengthValidation,
 } from "../../../utils/FormValidation";
 import { signUpAPI } from "../../../API/user";
-
 import "./RegisterForm.scss";
-import Password from "antd/lib/input/Password";
 
 export default function RegisterForm() {
   const [input, setInputs] = useState({

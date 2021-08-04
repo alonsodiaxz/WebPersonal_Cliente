@@ -40,9 +40,6 @@ export function SignInAPI(data) {
       return response.json();
     })
     .then((result) => {
-      if (result.accessToken) {
-        return result;
-      }
       return result;
     })
     .catch((err) => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./LoginForm.scss";
-import { Layout, Form, Input, Button, notification } from "antd";
+import { Form, Input, Button, notification } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { SignInAPI } from "../../../API/user";
 
@@ -12,7 +12,8 @@ export default function LoginForm() {
     password: null,
   });
 
-  const register = async () => {
+  const login = async (e) => {
+    e.preventDefault();
     const peticion = await SignInAPI(Login);
 
     if (peticion.accessToken) {
@@ -34,11 +35,7 @@ export default function LoginForm() {
   };
 
   return (
-    <Form
-      className="login-form"
-      onSubmitCapture={register}
-      onChange={changeForm}
-    >
+    <Form className="login-form" onSubmitCapture={login} onChange={changeForm}>
       <Item>
         <Input
           prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
