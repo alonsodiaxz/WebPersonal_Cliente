@@ -1,5 +1,5 @@
 import React from "react";
-import AlonsoLogo from "../../../assets/img/png/logo-white.png";
+import AlonsoLogo from "../../../assets/img/png/LABM.png";
 import { Button } from "antd";
 import {
   MenuFoldOutlined,

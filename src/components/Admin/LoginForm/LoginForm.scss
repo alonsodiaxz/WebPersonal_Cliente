@@ -1,0 +1,52 @@
+@import "../../../scss/index.scss";
+
+@mixin fontSize {
+  font-size: 0em + 20px / $defaultFontSize;
+}
+
+.login-form {
+  background-color: white;
+
+  //Solo el último elemento tiene margin 0 => last-of-type
+  .ant-form-item:last-of-type {
+    margin: 0;
+  }
+
+  &__input {
+    .ant-input-prefix {
+      .anticon {
+        @include fontSize();
+      }
+    }
+
+    input {
+      @include fontSize();
+      padding: 20px 20px 20px 40px !important;
+      //Cuando el input esta seleccionado
+      &:focus {
+        border-color: $primary-color;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &__button {
+    width: 100%;
+    height: 45px;
+    @include fontSize();
+    color: rgb(65, 65, 148);
+    background-color: $primary-color;
+    //Cuando se pasa por encima del botón
+    &:hover {
+      background-color: $primary-color-hover;
+      color: white;
+    }
+
+    &:focus,
+    &:active {
+      background-color: $primary-color;
+      color: $font-light;
+      border: 0;
+    }
+  }
+}

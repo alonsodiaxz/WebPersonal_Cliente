@@ -114,21 +114,21 @@ export default function RegisterForm() {
     for (let i = 0; i < inputs.length; i++) {
       inputs[i].classList.remove("success");
       inputs[i].classList.remove("error");
-
-      setInputs({
-        email: null,
-        password: null,
-        repeatPassword: null,
-        privacyPolicy: false,
-      });
-
-      setformValidation({
-        email: null,
-        password: null,
-        repeatPassword: null,
-        privacyPolicy: false,
-      });
     }
+
+    setInputs({
+      email: null,
+      password: null,
+      repeatPassword: null,
+      privacyPolicy: false,
+    });
+
+    setformValidation({
+      email: null,
+      password: null,
+      repeatPassword: null,
+      privacyPolicy: false,
+    });
   };
 
   const { Item } = Form;
