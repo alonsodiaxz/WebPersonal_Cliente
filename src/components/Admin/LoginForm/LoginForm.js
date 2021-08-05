@@ -38,7 +38,7 @@ export default function LoginForm() {
         }
 
         //Una vez el usuario se logea le hace la redirección hacia el /admin
-        /*window.location.href = "/admin";*/
+        window.location.href = "/admin";
       } else {
         notification["error"]({
           message: `${peticion.message}`,

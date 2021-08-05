@@ -4,7 +4,7 @@ import { Layout } from "antd";
 import MenuTop from "../components/Admin/MenuTop";
 import MenuSider from "../components/Admin/MenuSider";
 import AdminSignIn from "../pages/Admin/SignIn/SignIn";
-
+import { getAccessToken, getRefreshToken } from "../API/auth";
 import "./LayoutAdmin.scss";
 
 function LoadRoutes(props) {
@@ -31,7 +31,9 @@ export default function LayoutAdmin(props) {
   const { Header, Content, Footer } = Layout;
   const [menuCollapsed, setmenuCollapsed] = useState(false);
   const user = null;
-
+  const accessToken = getAccessToken();
+  const refreshToken = getRefreshToken();
+  console.log(refreshToken, "||", accessToken);
   //Condición que te redirige a esta ruta en caso de que no haya ningun usuario logeado.
   if (!user) {
     return (
