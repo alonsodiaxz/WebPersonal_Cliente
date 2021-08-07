@@ -6,6 +6,7 @@ import MenuSider from "../components/Admin/MenuSider";
 import AdminSignIn from "../pages/Admin/SignIn/SignIn";
 import { getAccessToken, getRefreshToken } from "../API/auth";
 import "./LayoutAdmin.scss";
+import useAuth from "../hooks/useAuth";
 
 function LoadRoutes(props) {
   const { routes } = props;
@@ -30,10 +31,11 @@ export default function LayoutAdmin(props) {
   const { routes } = props;
   const { Header, Content, Footer } = Layout;
   const [menuCollapsed, setmenuCollapsed] = useState(false);
-  const user = null;
+  const { user, isLoading } = useAuth();
+
   const accessToken = getAccessToken();
   const refreshToken = getRefreshToken();
-  console.log(refreshToken, "||", accessToken);
+
   //Condición que te redirige a esta ruta en caso de que no haya ningun usuario logeado.
   if (!user) {
     return (

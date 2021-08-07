@@ -25,6 +25,44 @@ export function getRefreshToken() {
   return tokenExpirado ? null : refresToken;
 }
 
+export function refreshAccessToken(refreshToken) {
+  const url = `${BASE_PATH}/${API_VERSION}/refresh-access-token`;
+  const bodyObj = {
+    refreshToken: refreshToken,
+  };
+  const params = {
+    method: "POST",
+    body: JSON.stringify(bodyObj),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  fetch(url, params)
+    .then((response) => {
+      if (response.status !== 200) {
+        return null;
+      }
+      return response.json();
+    })
+    .then((result) => {
+      //Si no hay result significa que tanto el accesToken como el refreshToken han caducado y no queda otra que deslogear al usuario
+      if (!result) {
+        logout();
+      } else {
+        const { accessToken, refreshToken } = result;
+        localStorage.setItem(ACCESS_TOKEN, accessToken);
+        localStorage.setItem(REFRESH_TOKEN, refreshToken);
+      }
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}
+
+export function logout() {
+  localStorage.removeItem(ACCESS_TOKEN);
+  localStorage.removeItem(REFRESH_TOKEN);
+}
+
 function willExpireToken(token) {
   const seconds = 60;
   const metaToken = jwtDecode(token);

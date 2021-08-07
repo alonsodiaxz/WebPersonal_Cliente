@@ -28,13 +28,13 @@ export default function LoginForm() {
           message: `${peticion.message}`,
         });
         const { accessToken, refreshToken } = peticion;
-        const localStorage1 = "email";
-        const localStorage2 = "password";
+        const localStorageEmail = "email";
+        const localStoragePassword = "password";
         if (Login.LoginRemember) {
           localStorage.setItem(ACCESS_TOKEN, accessToken);
           localStorage.setItem(REFRESH_TOKEN, refreshToken);
-          localStorage.setItem(localStorage1, Login.email);
-          localStorage.setItem(localStorage2, Login.password);
+          localStorage.setItem(localStorageEmail, Login.email);
+          localStorage.setItem(localStoragePassword, Login.password);
         }
 
         //Una vez el usuario se logea le hace la redirección hacia el /admin
