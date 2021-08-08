@@ -33,9 +33,6 @@ export default function LayoutAdmin(props) {
   const [menuCollapsed, setmenuCollapsed] = useState(false);
   const { user, isLoading } = useAuth();
 
-  const accessToken = getAccessToken();
-  const refreshToken = getRefreshToken();
-
   //Condición que te redirige a esta ruta en caso de que no haya ningun usuario logeado.
   if (!user) {
     return (
