@@ -6,11 +6,17 @@ import {
   PoweroffOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
+import { logout } from "../../../API/auth";
 
 import "./MenuTop.scss";
 
 export default function MenuTop(props) {
   const { menuCollapsed, setmenuCollapsed } = props;
+
+  const logoutUser = () => {
+    logout();
+    window.location.reload();
+  };
 
   return (
     <div className="menu-top">
@@ -31,7 +37,7 @@ export default function MenuTop(props) {
         </Button>
       </div>
       <div className="menu-top__right">
-        <Button type="link" onClick={() => console.log("Desconexión.")}>
+        <Button type="link" onClick={logoutUser}>
           <PoweroffOutlined />
         </Button>
       </div>
