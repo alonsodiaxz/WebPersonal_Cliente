@@ -4,6 +4,7 @@ import { Layout } from "antd";
 import MenuTop from "../components/Admin/MenuTop";
 import MenuSider from "../components/Admin/MenuSider";
 import AdminSignIn from "../pages/Admin/SignIn/SignIn";
+import AdminHome from "../pages/Admin/Admin";
 import { getAccessToken, getRefreshToken } from "../API/auth";
 import "./LayoutAdmin.scss";
 import useAuth from "../hooks/useAuth";
@@ -34,7 +35,7 @@ export default function LayoutAdmin(props) {
   const { user, isLoading } = useAuth();
 
   //Condición que te redirige a esta ruta en caso de que no haya ningun usuario logeado.
-  if (!user) {
+  if (!user && !isLoading) {
     return (
       <>
         <Route path="/admin/login" component={AdminSignIn} />
@@ -43,26 +44,30 @@ export default function LayoutAdmin(props) {
     );
   }
 
-  return (
-    <Layout>
-      <MenuSider menuCollapsed={menuCollapsed} />
-      <Layout
-        className="layout-admin"
-        style={{ marginLeft: menuCollapsed ? "80px" : "200px" }}
-      >
-        <Header className="layout-admin__header">
-          <MenuTop
-            menuCollapsed={menuCollapsed}
-            setmenuCollapsed={setmenuCollapsed}
-          />
-        </Header>
-        <Content className="layout-admin__content">
-          <LoadRoutes routes={routes} />
-        </Content>
-        <Footer className="layout-admin__footer">
-          Alonso Diaz Sobrino 2021
-        </Footer>
+  if (user && !isLoading) {
+    return (
+      <Layout>
+        <MenuSider menuCollapsed={menuCollapsed} />
+        <Layout
+          className="layout-admin"
+          style={{ marginLeft: menuCollapsed ? "80px" : "200px" }}
+        >
+          <Header className="layout-admin__header">
+            <MenuTop
+              menuCollapsed={menuCollapsed}
+              setmenuCollapsed={setmenuCollapsed}
+            />
+          </Header>
+          <Content className="layout-admin__content">
+            <LoadRoutes routes={routes} />
+          </Content>
+          <Footer className="layout-admin__footer">
+            Alonso Diaz Sobrino 2021
+          </Footer>
+        </Layout>
       </Layout>
-    </Layout>
-  );
+    );
+  }
+
+  return null;
 }
