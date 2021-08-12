@@ -46,3 +46,48 @@ export function SignInAPI(data) {
       return err.message;
     });
 }
+
+export function getUsers(token) {
+  const url = `${BASE_PATH}/${API_VERSION}/users`;
+  const params = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}
+
+export function getUsersActive(token, status) {
+  const url = `${BASE_PATH}/${API_VERSION}/users-active?active=${status}`;
+
+  const params = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}
