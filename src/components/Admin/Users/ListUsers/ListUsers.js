@@ -9,6 +9,7 @@ import {
 import "./ListUsers.scss";
 import NoAvatar from "../../../../assets/img/png/no-avatar.png";
 import Modal from "../../../Modal";
+import EditUserForm from "../EditUserForm";
 
 export default function ListUsers(props) {
   const { usersActive, usersInactive } = props;
@@ -57,10 +58,10 @@ function UsersActive(props) {
     setIsVisibleModal(true);
     setModalTitle(
       `Editar ${user.name ? user.name : "usuario"} ${
-        user.lastname ? user.lastname : "anónimo."
+        user.lastname ? user.lastname : "anónimo"
       } `
     );
-    setModalContent("Formulario para editar un usuario.");
+    setModalContent(<EditUserForm user={user} />);
   };
 
   return (
