@@ -126,21 +126,24 @@ function EditForm(props) {
             />
           </Item>
         </Col>
+
         <Col span={12}>
-          <Select
-            placeholder="Selecciona un rol"
-            onChange={(ev) =>
-              setUserData({
-                ...userData,
-                role: ev,
-              })
-            }
-            defaultValue={userData.role}
-          >
-            <Option value="admin"> Administrador</Option>
-            <Option value="editor"> Editor</Option>
-            <Option value="reviewer"> Revisor</Option>
-          </Select>
+          <Item>
+            <Select
+              placeholder="Selecciona un rol"
+              onChange={(ev) =>
+                setUserData({
+                  ...userData,
+                  role: ev,
+                })
+              }
+              defaultValue={userData.role}
+            >
+              <Option value="admin"> Administrador</Option>
+              <Option value="editor"> Editor</Option>
+              <Option value="reviewer"> Revisor</Option>
+            </Select>
+          </Item>
         </Col>
       </Row>
       <Row gutter={24}>
@@ -176,7 +179,7 @@ function EditForm(props) {
         </Col>
       </Row>
       <Item>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" className="btn-submit">
           Actualizar usuario
         </Button>
       </Item>
