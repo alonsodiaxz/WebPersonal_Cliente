@@ -10,11 +10,28 @@ import NoAvatar from "../../../../assets/img/png/no-avatar.png";
 export default function EditUserForm(props) {
   const { user } = props;
   const [avatar, setAvatar] = useState(null);
+  const [userData, setUserData] = useState({
+    name: user.name,
+    lastname: user.lastname,
+    email: user.email,
+    role: user.role,
+    avatar: user.avatar,
+  });
+
+  const updateUser = (ev) => {
+    ev.preventDefault();
+    console.log(userData);
+  };
 
   return (
     <div className="edit-user-form">
       <UploadAvatar avatar={avatar} setAvatar={setAvatar} />
       <h2> {user.email}</h2>
+      <EditForm
+        user={user}
+        userData={userData}
+        setUserData={setUserData}
+      ></EditForm>
     </div>
   );
 }
@@ -45,5 +62,25 @@ function UploadAvatar(props) {
         <Avatar size={150} src={avatar ? avatar.preview : NoAvatar} />
       )}
     </div>
+  );
+}
+
+function EditForm(props) {
+  const { user, userData, setUserData } = props;
+  const { Item } = Form;
+  console.log(user);
+
+  return (
+    <Form className="edit-user-form">
+      <Item>
+        <Input
+          type="name"
+          name="name"
+          placeholder="Nombre"
+          className="edit-user-form__input"
+          value={user.name}
+        />
+      </Item>
+    </Form>
   );
 }

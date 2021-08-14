@@ -13,6 +13,23 @@ export function minLengthValidation(inputData, minLenght) {
   }
 }
 
+export function nameLastNameValidation(inputData) {
+  const { value } = inputData;
+
+  //Expresión para permitir solo letas en los campos de nombre y apellidos.
+  const pattern = new RegExp("^[A-Z ]+$", "i");
+  removeClassErrorSuccess(inputData);
+  const resultado = pattern.test(value);
+
+  if (resultado) {
+    inputData.classList.add("success");
+    return true;
+  } else {
+    inputData.classList.add("error");
+    return false;
+  }
+}
+
 export function emailValidation(inputData) {
   const emailValid =
     // eslint-disable-next-line no-useless-escape

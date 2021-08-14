@@ -4,18 +4,23 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import {
   emailValidation,
   minLengthValidation,
+  nameLastNameValidation,
 } from "../../../utils/FormValidation";
 import { signUpAPI } from "../../../API/user";
 import "./RegisterForm.scss";
 
 export default function RegisterForm() {
   const [input, setInputs] = useState({
+    name: null,
+    lastname: null,
     email: null,
     password: null,
     repeatPassword: null,
     privacyPolicy: false,
   });
   const [formValidation, setformValidation] = useState({
+    name: null,
+    lastname: null,
     email: null,
     password: null,
     repeatPassword: null,
@@ -35,6 +40,20 @@ export default function RegisterForm() {
 
   const inputValidation = (e) => {
     const { type, name } = e.target;
+
+    if (name === "name") {
+      setformValidation({
+        ...formValidation,
+        [name]: nameLastNameValidation(e.target),
+      });
+    }
+
+    if (name === "lastname") {
+      setformValidation({
+        ...formValidation,
+        [name]: nameLastNameValidation(e.target),
+      });
+    }
     if (type === "email") {
       setformValidation({
         ...formValidation,
@@ -59,13 +78,18 @@ export default function RegisterForm() {
 
   const Register = async (ev) => {
     ev.preventDefault(); //Para que cuando pulsemos el boton de submit no recargue la pagina.
-    const { email, password, repeatPassword, privacyPolicy } = formValidation;
+    const { name, lastname, email, password, repeatPassword, privacyPolicy } =
+      formValidation;
+    const nameValue = input.name;
+    const lastnameValue = input.lastname;
     const emailValue = input.email;
     const passwordValue = input.password;
     const repeatPasswordValue = input.repeatPassword;
     const privacyPolicyVal = input.privacyPolicy;
 
     if (
+      !nameValue ||
+      !lastnameValue ||
       !emailValue ||
       !passwordValue ||
       !repeatPasswordValue ||
@@ -73,7 +97,14 @@ export default function RegisterForm() {
     ) {
       notification["error"]({ message: "Todos los campos son obligatorios." });
     } else {
-      if (email && password && repeatPassword && privacyPolicy) {
+      if (
+        name &&
+        lastname &&
+        email &&
+        password &&
+        repeatPassword &&
+        privacyPolicy
+      ) {
         if (passwordValue === repeatPasswordValue) {
           //Conectamos con el API para registrar el usuario
           const result = await signUpAPI(input);
@@ -105,6 +136,8 @@ export default function RegisterForm() {
     }
 
     setInputs({
+      name: null,
+      lastname: null,
       email: null,
       password: null,
       repeatPassword: null,
@@ -112,6 +145,8 @@ export default function RegisterForm() {
     });
 
     setformValidation({
+      name: null,
+      lastname: null,
       email: null,
       password: null,
       repeatPassword: null,
@@ -126,6 +161,28 @@ export default function RegisterForm() {
       onSubmitCapture={Register}
       onChange={changeForm}
     >
+      <Item>
+        <Input
+          prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+          type="name"
+          name="name"
+          placeholder="Nombre"
+          className="register-form__input"
+          value={input.name}
+          onChange={inputValidation}
+        />
+      </Item>
+      <Item>
+        <Input
+          prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+          type="lastname"
+          name="lastname"
+          placeholder="Apellidos"
+          className="register-form__input"
+          value={input.lastname}
+          onChange={inputValidation}
+        />
+      </Item>
       <Item>
         <Input
           prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
