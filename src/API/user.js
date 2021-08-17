@@ -91,3 +91,64 @@ export function getUsersActive(token, status) {
       return err.message;
     });
 }
+
+export function uploadAvatar(token, avatar, userId) {
+  const url = `${BASE_PATH}/${API_VERSION}/upload-avatar/${userId}`;
+  //Se utiliza cuando queremos mandar una imagen.
+  const formData = new FormData();
+  formData.append("avatar", avatar, avatar.name);
+  const params = {
+    method: "PUT",
+    body: formData,
+    headers: {
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}
+
+export function getAvatar(avatarName) {
+  const url = `${BASE_PATH}/${API_VERSION}/get-avatar/${avatarName}`;
+  const params = {
+    method: "GET",
+  };
+
+  return fetch(url, params)
+    .then((response) => response.url)
+    .catch((err) => {
+      return err.message;
+    });
+}
+
+export function uploadUser(token, userData) {
+  const url = `${BASE_PATH}/${API_VERSION}/update-user`;
+  const params = {
+    method: "PUT",
+    body: JSON.stringify(userData),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}

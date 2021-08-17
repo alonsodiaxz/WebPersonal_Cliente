@@ -8,31 +8,51 @@ import { useCallback } from "react";
 import NoAvatar from "../../../../assets/img/png/no-avatar.png";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
+import { uploadUser, getAvatar } from "../../../../API/user";
+import { getAccessToken } from "../../../../API/auth";
 
 export default function EditUserForm(props) {
   const { user } = props;
   const [avatar, setAvatar] = useState(null);
-  const [userData, setUserData] = useState({
-    name: user.name,
-    lastname: user.lastname,
-    email: user.email,
-    password: user.password,
-    role: user.role,
-    avatar: user.avatar,
-  });
+  const [userData, setUserData] = useState({});
+  const token = getAccessToken();
+
+  useEffect(() => {
+    setUserData({
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      password: null,
+      repeatPassword: null,
+      role: user.role,
+      avatar: user.avatar,
+    });
+  }, [user]);
 
   useEffect(() => {
     if (avatar) {
       setUserData({
         ...userData,
-        avatar: avatar,
+        avatar: avatar.file,
       });
     }
   }, [avatar]);
 
-  const updateUser = (ev) => {
+  useEffect(() => {
+    if (user.avatar) {
+      getAvatar(user.avatar).then((response) => {
+        setAvatar(response);
+      });
+    } else {
+      setAvatar(null);
+    }
+  }, [user]);
+
+  const updateUser = async (ev) => {
     ev.preventDefault();
     console.log(userData);
+    /*const resultado = await uploadUser(userData, token);
+    console.log(resultado);*/
   };
 
   return (
@@ -50,6 +70,19 @@ export default function EditUserForm(props) {
 
 function UploadAvatar(props) {
   const { avatar, setAvatar } = props;
+  const [avatarUrl, setAvatarUrl] = useState(null);
+
+  useEffect(() => {
+    if (avatar) {
+      if (avatar.preview) {
+        setAvatarUrl(avatar.preview);
+      } else {
+        setAvatarUrl(avatar);
+      }
+    } else {
+      setAvatarUrl(null);
+    }
+  }, [avatar]);
 
   const onDrop = useCallback(
     (acceptedFiles) => {
@@ -71,7 +104,7 @@ function UploadAvatar(props) {
       {isDragActive ? (
         <Avatar size={150} src={NoAvatar} />
       ) : (
-        <Avatar size={150} src={avatar ? avatar.preview : NoAvatar} />
+        <Avatar size={150} src={avatarUrl ? avatarUrl : NoAvatar} />
       )}
     </div>
   );
@@ -91,7 +124,7 @@ function EditForm(props) {
               prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
               placeholder="Nombre"
               className="edit-user-form__input"
-              defaultValue={userData.name}
+              value={userData.name}
               onChange={(e) =>
                 setUserData({ ...userData, name: e.target.value })
               }
@@ -104,7 +137,7 @@ function EditForm(props) {
               prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
               placeholder="Apellidos"
               className="edit-user-form__input"
-              defaultValue={userData.lastname}
+              value={userData.lastname}
               onChange={(e) =>
                 setUserData({ ...userData, lastname: e.target.value })
               }
@@ -119,7 +152,7 @@ function EditForm(props) {
               prefix={<MailOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
               placeholder="Correo electrónico"
               className="edit-user-form__input"
-              defaultValue={userData.email}
+              value={userData.email}
               onChange={(e) =>
                 setUserData({ ...userData, email: e.target.value })
               }
@@ -137,7 +170,7 @@ function EditForm(props) {
                   role: ev,
                 })
               }
-              defaultValue={userData.role}
+              value={userData.role}
             >
               <Option value="admin"> Administrador</Option>
               <Option value="editor"> Editor</Option>
