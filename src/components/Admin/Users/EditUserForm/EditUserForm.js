@@ -1,42 +1,38 @@
 import React from "react";
 import "./EditUserForm.scss";
-import { Avatar, Form, Input, Select, Button, Row, Col } from "antd";
-import {} from "@ant-design/icons";
+import {
+  Avatar,
+  Form,
+  Input,
+  Select,
+  Button,
+  Row,
+  Col,
+  notification,
+} from "antd";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import { useCallback } from "react";
 import NoAvatar from "../../../../assets/img/png/no-avatar.png";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
-import { uploadUser, getAvatar } from "../../../../API/user";
+import { uploadUser, getAvatar, uploadAvatar } from "../../../../API/user";
 import { getAccessToken } from "../../../../API/auth";
 
 export default function EditUserForm(props) {
   const { user } = props;
   const [avatar, setAvatar] = useState(null);
   const [userData, setUserData] = useState({});
-  const token = getAccessToken();
 
   useEffect(() => {
     setUserData({
       name: user.name,
       lastname: user.lastname,
       email: user.email,
-      password: null,
-      repeatPassword: null,
       role: user.role,
       avatar: user.avatar,
     });
   }, [user]);
-
-  useEffect(() => {
-    if (avatar) {
-      setUserData({
-        ...userData,
-        avatar: avatar.file,
-      });
-    }
-  }, [avatar]);
 
   useEffect(() => {
     if (user.avatar) {
@@ -47,12 +43,54 @@ export default function EditUserForm(props) {
       setAvatar(null);
     }
   }, [user]);
+  useEffect(() => {
+    if (avatar) {
+      setUserData({
+        ...userData,
+        avatar: avatar.file,
+      });
+    }
+  }, [avatar]);
 
-  const updateUser = async (ev) => {
+  const updateUser = (ev) => {
     ev.preventDefault();
-    console.log(userData);
-    /*const resultado = await uploadUser(userData, token);
-    console.log(resultado);*/
+    const token = getAccessToken();
+    let userUpdate = userData;
+
+    if (userUpdate || userUpdate.repeatPassword) {
+      if (userUpdate.password !== userUpdate.repeatPassword) {
+        notification["error"]({
+          message: "Las contraseñas tienen que ser iguales.",
+        });
+        return;
+      }
+    }
+
+    if (!userUpdate.name || !userUpdate.lastname || !userUpdate.email) {
+      notification["error"]({
+        message: "El nombre, apellidos y email son obligatorios.",
+      });
+      return;
+    }
+
+    if (typeof userUpdate.avatar === "object") {
+      uploadAvatar(token, userUpdate.avatar, user._id).then((response) => {
+        userUpdate.avatar = response.avatarName;
+        uploadUser(token, userData, user._id).then((resultado) => {
+          notification["success"]({
+            message: resultado.message,
+          });
+          window.location.reload();
+        });
+      });
+    } else {
+      uploadUser(token, userData, user._id).then((resultado) => {
+        notification["success"]({
+          message: resultado.message,
+        });
+        window.location.reload();
+      });
+    }
   };
 
   return (

@@ -130,8 +130,8 @@ export function getAvatar(avatarName) {
     });
 }
 
-export function uploadUser(token, userData) {
-  const url = `${BASE_PATH}/${API_VERSION}/update-user`;
+export function uploadUser(token, userData, id) {
+  const url = `${BASE_PATH}/${API_VERSION}/update-user/${id}`;
   const params = {
     method: "PUT",
     body: JSON.stringify(userData),
