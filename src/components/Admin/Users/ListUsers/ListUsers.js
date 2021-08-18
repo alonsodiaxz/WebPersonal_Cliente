@@ -15,7 +15,7 @@ import { getAvatar } from "../../../../API/user";
 //RECARGAR LA PAGINA --> window.location.reload();
 
 export default function ListUsers(props) {
-  const { usersActive, usersInactive } = props;
+  const { usersActive, usersInactive, setReloadUsers } = props;
   const [viewUsersActives, setViewUsersActives] = useState(true);
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -38,6 +38,7 @@ export default function ListUsers(props) {
           setIsVisibleModal={setIsVisibleModal}
           setModalTitle={setModalTitle}
           setModalContent={setModalContent}
+          setReloadUsers={setReloadUsers}
         />
       ) : (
         <UsersInactive usersInactive={usersInactive} />
@@ -54,8 +55,13 @@ export default function ListUsers(props) {
 }
 
 function UsersActive(props) {
-  const { usersActive, setIsVisibleModal, setModalTitle, setModalContent } =
-    props;
+  const {
+    usersActive,
+    setIsVisibleModal,
+    setModalTitle,
+    setModalContent,
+    setReloadUsers,
+  } = props;
 
   const editUser = (user) => {
     setIsVisibleModal(true);
@@ -64,7 +70,13 @@ function UsersActive(props) {
         user.lastname ? user.lastname : "anónimo"
       } `
     );
-    setModalContent(<EditUserForm user={user} />);
+    setModalContent(
+      <EditUserForm
+        user={user}
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadUsers={setReloadUsers}
+      />
+    );
   };
 
   return (

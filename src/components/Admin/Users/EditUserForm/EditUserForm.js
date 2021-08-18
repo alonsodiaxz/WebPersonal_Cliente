@@ -18,9 +18,14 @@ import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 import { uploadUser, getAvatar, uploadAvatar } from "../../../../API/user";
 import { getAccessToken } from "../../../../API/auth";
+import {
+  minLengthValidation,
+  emailValidation,
+  nameLastNameValidation,
+} from "../../../../utils/FormValidation";
 
 export default function EditUserForm(props) {
-  const { user } = props;
+  const { user, setIsVisibleModal, setReloadUsers } = props;
   const [avatar, setAvatar] = useState(null);
   const [userData, setUserData] = useState({});
 
@@ -57,12 +62,14 @@ export default function EditUserForm(props) {
     const token = getAccessToken();
     let userUpdate = userData;
 
-    if (userUpdate || userUpdate.repeatPassword) {
+    if (userUpdate.password || userUpdate.repeatPassword) {
       if (userUpdate.password !== userUpdate.repeatPassword) {
         notification["error"]({
           message: "Las contraseñas tienen que ser iguales.",
         });
         return;
+      } else {
+        delete userUpdate.repeatPassword;
       }
     }
 
@@ -80,7 +87,8 @@ export default function EditUserForm(props) {
           notification["success"]({
             message: resultado.message,
           });
-          window.location.reload();
+          setIsVisibleModal(false);
+          setReloadUsers(true);
         });
       });
     } else {
@@ -88,7 +96,8 @@ export default function EditUserForm(props) {
         notification["success"]({
           message: resultado.message,
         });
-        window.location.reload();
+        setIsVisibleModal(false);
+        setReloadUsers(true);
       });
     }
   };
@@ -150,8 +159,37 @@ function UploadAvatar(props) {
 
 function EditForm(props) {
   const { userData, setUserData, updateUser } = props;
+
   const { Item } = Form;
   const { Option } = Select;
+
+  const inputValidation = (e) => {
+    const { name, type } = e.target;
+
+    if (name === "name") {
+      setUserData({ ...userData, [name]: e.target.value });
+      nameLastNameValidation(e.target);
+    }
+
+    if (name === "lastname") {
+      setUserData({ ...userData, [name]: e.target.value });
+      nameLastNameValidation(e.target);
+    }
+
+    if (type === "email") {
+      setUserData({
+        ...userData,
+        [name]: e.target.value,
+      });
+
+      emailValidation(e.target);
+    }
+
+    if (type === "password") {
+      setUserData({ ...userData, [name]: e.target.value });
+      minLengthValidation(e.target, 6);
+    }
+  };
 
   return (
     <Form className="edit-user-form" onSubmitCapture={updateUser}>
@@ -160,12 +198,11 @@ function EditForm(props) {
           <Item>
             <Input
               prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+              name="name"
               placeholder="Nombre"
               className="edit-user-form__input"
               value={userData.name}
-              onChange={(e) =>
-                setUserData({ ...userData, name: e.target.value })
-              }
+              onChange={inputValidation}
             />
           </Item>
         </Col>
@@ -173,12 +210,11 @@ function EditForm(props) {
           <Item>
             <Input
               prefix={<UserOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+              name="lastname"
               placeholder="Apellidos"
               className="edit-user-form__input"
               value={userData.lastname}
-              onChange={(e) =>
-                setUserData({ ...userData, lastname: e.target.value })
-              }
+              onChange={inputValidation}
             />
           </Item>
         </Col>
@@ -188,12 +224,12 @@ function EditForm(props) {
           <Item>
             <Input
               prefix={<MailOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+              name="email"
+              type="email"
               placeholder="Correo electrónico"
               className="edit-user-form__input"
               value={userData.email}
-              onChange={(e) =>
-                setUserData({ ...userData, email: e.target.value })
-              }
+              onChange={inputValidation}
             />
           </Item>
         </Col>
@@ -222,14 +258,11 @@ function EditForm(props) {
           <Item>
             <Input
               prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
+              name="password"
               type="password"
               placeholder="Contraseña"
-              onChange={(e) =>
-                setUserData({
-                  ...userData,
-                  password: e.target.value,
-                })
-              }
+              onChange={inputValidation}
+              value={userData.password}
             ></Input>
           </Item>
         </Col>
@@ -238,13 +271,10 @@ function EditForm(props) {
             <Input
               prefix={<LockOutlined style={{ color: "rgba(0,0,0,.25)" }} />}
               type="password"
+              name="repeatPassword"
               placeholder="Repetir contraseña"
-              onChange={(e) =>
-                setUserData({
-                  ...userData,
-                  repeatPassword: e.target.value,
-                })
-              }
+              onChange={inputValidation}
+              value={userData.repeatPassword}
             ></Input>
           </Item>
         </Col>

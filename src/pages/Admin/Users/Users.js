@@ -7,6 +7,7 @@ import ListUsers from "../../../components/Admin/Users/ListUsers";
 export default function Users() {
   const [usersActive, setUsersActive] = useState([]);
   const [usersInactive, setUsersInactive] = useState([]);
+  const [reloadUsers, setReloadUsers] = useState(false);
   const accessToken = getAccessToken();
 
   useEffect(() => {
@@ -16,11 +17,16 @@ export default function Users() {
     getUsersActive(accessToken, false).then((response) => {
       setUsersInactive(response.users);
     });
-  }, [accessToken]);
+    setReloadUsers(false);
+  }, [accessToken, reloadUsers]);
 
   return (
     <div>
-      <ListUsers usersActive={usersActive} usersInactive={usersInactive} />
+      <ListUsers
+        usersActive={usersActive}
+        usersInactive={usersInactive}
+        setReloadUsers={setReloadUsers}
+      />
     </div>
   );
 }
