@@ -178,3 +178,25 @@ export function activateUser(token, id, status) {
       return err.message;
     });
 }
+
+export function deleteUser(token, id) {
+  const url = `${BASE_PATH}/${API_VERSION}/delete-user/${id}`;
+  const params = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}

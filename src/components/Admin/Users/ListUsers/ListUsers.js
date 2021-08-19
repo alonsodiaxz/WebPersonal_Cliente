@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Switch, List, Avatar, Button, notification } from "antd";
+import {
+  Switch,
+  List,
+  Avatar,
+  Button,
+  notification,
+  Row,
+  Col,
+  Form,
+  Modal as Modalantd,
+} from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   StopOutlined,
   CheckOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import "./ListUsers.scss";
 import NoAvatar from "../../../../assets/img/png/no-avatar.png";
 import Modal from "../../../Modal";
 import EditUserForm from "../EditUserForm";
-import { getAvatar, activateUser } from "../../../../API/user";
+import { getAvatar, activateUser, deleteUser } from "../../../../API/user";
 import { getAccessToken } from "../../../../API/auth";
-
-//RECARGAR LA PAGINA --> window.location.reload();
+import DeleteUserForm from "../DeleteUserForm";
+const { confirm } = Modalantd;
 
 export default function ListUsers(props) {
   const { usersActive, usersInactive, setReloadUsers } = props;
@@ -45,6 +56,9 @@ export default function ListUsers(props) {
         <UsersInactive
           usersInactive={usersInactive}
           setReloadUsers={setReloadUsers}
+          setIsVisibleModal={setIsVisibleModal}
+          setModalTitle={setModalTitle}
+          setModalContent={setModalContent}
         />
       )}
       <Modal
@@ -90,6 +104,9 @@ function UsersActive(props) {
       dataSource={usersActive}
       renderItem={(user) => (
         <UserActive
+          setIsVisibleModal={setIsVisibleModal}
+          setModalTitle={setModalTitle}
+          setModalContent={setModalContent}
           user={user}
           editUser={editUser}
           setReloadUsers={setReloadUsers}
@@ -100,9 +117,17 @@ function UsersActive(props) {
 }
 
 function UserActive(props) {
-  const { user, editUser, setReloadUsers } = props;
+  const {
+    user,
+    editUser,
+    setReloadUsers,
+    setIsVisibleModal,
+    setModalTitle,
+    setModalContent,
+  } = props;
   const { _id } = user;
   const [avatar, setAvatar] = useState(null);
+  const accessToken = getAccessToken();
 
   useEffect(() => {
     if (user.avatar) {
@@ -115,10 +140,52 @@ function UserActive(props) {
   }, [user]);
 
   const desactivateUser = async () => {
-    const accessToken = getAccessToken();
     const response = await activateUser(accessToken, _id, false);
     notification["success"]({ message: response.message });
     setReloadUsers(true);
+  };
+
+  /*const showDeleteConfirm = () => {
+    confirm({
+      title: "Eliminado usuario",
+      content: `¿Estas seguro de que deseas eliminar ${user.email}?`,
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        deleteUser(accessToken, _id)
+          .then((response) => {
+            notification["success"]({ message: response.message });
+            setReloadUsers(true);
+          })
+          .catch((err) => notification["error"]({ message: err.message }));
+      },
+    });
+  };*/
+
+  const deleteUsers = () => {
+    setIsVisibleModal(true);
+    setModalTitle(
+      <Form>
+        <Row gutter={24}>
+          <Col span={2}>
+            <WarningOutlined style={{ color: "orange" }} />
+          </Col>
+          <Col span={22}>
+            <h3> Eliminando usuario</h3>
+          </Col>
+        </Row>
+      </Form>
+    );
+    setModalContent(
+      <DeleteUserForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadUsers={setReloadUsers}
+        accessToken={accessToken}
+        _id={_id}
+        email={user.email}
+      ></DeleteUserForm>
+    );
   };
 
   return (
@@ -130,7 +197,7 @@ function UserActive(props) {
         <Button type="danger" onClick={desactivateUser}>
           <StopOutlined />
         </Button>,
-        <Button type="danger" onClick={() => console.log("Eliminar usuario.")}>
+        <Button type="danger" onClick={deleteUsers}>
           <DeleteOutlined />
         </Button>,
       ]}
@@ -146,23 +213,42 @@ function UserActive(props) {
 }
 
 function UsersInactive(props) {
-  const { usersInactive, setReloadUsers } = props;
+  const {
+    usersInactive,
+    setReloadUsers,
+    setIsVisibleModal,
+    setModalTitle,
+    setModalContent,
+  } = props;
   return (
     <List
       className="user-active"
       itemLayout="horizontal"
       dataSource={usersInactive}
       renderItem={(user) => (
-        <UserInactive user={user} setReloadUsers={setReloadUsers} />
+        <UserInactive
+          user={user}
+          setReloadUsers={setReloadUsers}
+          setIsVisibleModal={setIsVisibleModal}
+          setModalTitle={setModalTitle}
+          setModalContent={setModalContent}
+        />
       )}
     />
   );
 }
 
 function UserInactive(props) {
-  const { user, setReloadUsers } = props;
+  const {
+    user,
+    setReloadUsers,
+    setIsVisibleModal,
+    setModalTitle,
+    setModalContent,
+  } = props;
   const [avatar, setAvatar] = useState(null);
   const { _id } = user;
+  const accessToken = getAccessToken();
 
   useEffect(() => {
     if (user.avatar) {
@@ -175,7 +261,6 @@ function UserInactive(props) {
   }, [user]);
 
   const activateUsers = () => {
-    const accessToken = getAccessToken();
     activateUser(accessToken, _id, true)
       .then((response) => {
         notification["success"]({
@@ -190,13 +275,38 @@ function UserInactive(props) {
       });
   };
 
+  const deleteUsers = () => {
+    setIsVisibleModal(true);
+    setModalTitle(
+      <Form>
+        <Row gutter={24}>
+          <Col span={2}>
+            <WarningOutlined style={{ color: "orange" }} />
+          </Col>
+          <Col span={22}>
+            <h3> Eliminando usuario</h3>
+          </Col>
+        </Row>
+      </Form>
+    );
+    setModalContent(
+      <DeleteUserForm
+        setIsVisibleModal={setIsVisibleModal}
+        setReloadUsers={setReloadUsers}
+        accessToken={accessToken}
+        _id={_id}
+        email={user.email}
+      ></DeleteUserForm>
+    );
+  };
+
   return (
     <List.Item
       actions={[
         <Button type="primary" onClick={activateUsers}>
           <CheckOutlined />
         </Button>,
-        <Button type="danger" onClick={() => console.log("Eliminar usuario.")}>
+        <Button type="danger" onClick={deleteUsers}>
           <DeleteOutlined />
         </Button>,
       ]}

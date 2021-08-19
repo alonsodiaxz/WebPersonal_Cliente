@@ -1,0 +1,20 @@
+@import "../../../../scss/index.scss";
+@mixin fontSize {
+  font-size: 0em + 15px / $defaultFontSize;
+}
+
+.delete-form {
+  &__buttonleft {
+    @include fontSize();
+    width: 120px;
+    margin-left: 100px;
+
+    height: 30px;
+  }
+
+  &__buttonright {
+    @include fontSize();
+    width: 120px;
+    height: 30px;
+  }
+}
