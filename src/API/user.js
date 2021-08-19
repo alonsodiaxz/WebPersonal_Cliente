@@ -152,3 +152,29 @@ export function uploadUser(token, userData, id) {
       return err.message;
     });
 }
+
+export function activateUser(token, id, status) {
+  const url = `${BASE_PATH}/${API_VERSION}/activate-user/${id}`;
+  const data = {
+    active: status,
+  };
+  const params = {
+    method: "PUT",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err.message;
+    });
+}
