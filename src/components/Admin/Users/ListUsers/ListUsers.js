@@ -33,17 +33,51 @@ export default function ListUsers(props) {
   const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState(null);
 
+  const showDeleteConfirm = (accessToken, _id, email) => {
+    confirm({
+      title: "Eliminando usuario",
+      content: `¿Estas seguro de que deseas eliminar al usuario ${email}?`,
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        deleteUser(accessToken, _id)
+          .then((response) => {
+            notification["success"]({ message: response.message });
+            setReloadUsers(true);
+          })
+          .catch((err) => notification["error"]({ message: err.message }));
+      },
+    });
+  };
+
+  const addUserModal = () => {
+    setIsVisibleModal(true);
+    setModalTitle("Creando nuevo usuario");
+    setModalContent(
+      <div>
+        <h1>Formulario de creacion de usuario</h1>
+      </div>
+    );
+  };
+
   return (
     <div className="list-users">
-      <div className="list-users__switch">
-        <Switch
-          defaultChecked
-          onChange={() => setViewUsersActives(!viewUsersActives)}
-        />
-        <span>
-          {viewUsersActives ? "Usuarios activos" : "Usuarios inactivos"}
-        </span>
+      <div className="list-users__header">
+        <div className="list-users__header-switch">
+          <Switch
+            defaultChecked
+            onChange={() => setViewUsersActives(!viewUsersActives)}
+          />
+          <span>
+            {viewUsersActives ? "Usuarios activos" : "Usuarios inactivos"}
+          </span>
+        </div>
+        <Button type="primary" onClick={addUserModal}>
+          Nuevo Usuario
+        </Button>
       </div>
+
       {viewUsersActives ? (
         <UsersActive
           usersActive={usersActive}
@@ -51,6 +85,7 @@ export default function ListUsers(props) {
           setModalTitle={setModalTitle}
           setModalContent={setModalContent}
           setReloadUsers={setReloadUsers}
+          showDeleteConfirm={showDeleteConfirm}
         />
       ) : (
         <UsersInactive
@@ -59,6 +94,7 @@ export default function ListUsers(props) {
           setIsVisibleModal={setIsVisibleModal}
           setModalTitle={setModalTitle}
           setModalContent={setModalContent}
+          showDeleteConfirm={showDeleteConfirm}
         />
       )}
       <Modal
@@ -79,6 +115,7 @@ function UsersActive(props) {
     setModalTitle,
     setModalContent,
     setReloadUsers,
+    showDeleteConfirm,
   } = props;
 
   const editUser = (user) => {
@@ -110,6 +147,7 @@ function UsersActive(props) {
           user={user}
           editUser={editUser}
           setReloadUsers={setReloadUsers}
+          showDeleteConfirm={showDeleteConfirm}
         />
       )}
     />
@@ -124,6 +162,7 @@ function UserActive(props) {
     setIsVisibleModal,
     setModalTitle,
     setModalContent,
+    showDeleteConfirm,
   } = props;
   const { _id } = user;
   const [avatar, setAvatar] = useState(null);
@@ -144,24 +183,6 @@ function UserActive(props) {
     notification["success"]({ message: response.message });
     setReloadUsers(true);
   };
-
-  /*const showDeleteConfirm = () => {
-    confirm({
-      title: "Eliminado usuario",
-      content: `¿Estas seguro de que deseas eliminar ${user.email}?`,
-      okText: "Eliminar",
-      okType: "danger",
-      cancelText: "Cancelar",
-      onOk() {
-        deleteUser(accessToken, _id)
-          .then((response) => {
-            notification["success"]({ message: response.message });
-            setReloadUsers(true);
-          })
-          .catch((err) => notification["error"]({ message: err.message }));
-      },
-    });
-  };*/
 
   const deleteUsers = () => {
     setIsVisibleModal(true);
@@ -197,7 +218,10 @@ function UserActive(props) {
         <Button type="danger" onClick={desactivateUser}>
           <StopOutlined />
         </Button>,
-        <Button type="danger" onClick={deleteUsers}>
+        <Button
+          type="danger"
+          onClick={() => showDeleteConfirm(accessToken, _id, user.email)}
+        >
           <DeleteOutlined />
         </Button>,
       ]}
