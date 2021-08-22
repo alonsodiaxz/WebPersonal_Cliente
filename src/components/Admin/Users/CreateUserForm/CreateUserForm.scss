@@ -1,0 +1,14 @@
+.form-add {
+  text-align: center;
+  padding: 10px;
+  margin: 0 auto;
+
+  .ant-form-item {
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  &__button {
+    width: 100%;
+  }
+}

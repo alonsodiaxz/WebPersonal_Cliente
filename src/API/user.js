@@ -200,3 +200,26 @@ export function deleteUser(token, id) {
       return err.message;
     });
 }
+
+export function signUpAdmin(token, data) {
+  const url = `${BASE_PATH}/${API_VERSION}/sign-up-admin`;
+  const params = {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err;
+    });
+}
