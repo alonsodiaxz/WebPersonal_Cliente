@@ -3,7 +3,7 @@ import { List, Switch, Button, Modal as ModalAntd, notification } from "antd";
 import DragSortableList from "react-drag-sortable";
 import Modal from "../../../Modal";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { updateMenu } from "../../../../API/menu";
+import { updateMenu, activateMenu } from "../../../../API/menu";
 import { getAccessToken } from "../../../../API/auth";
 
 import "./MenuWebList.scss";
@@ -15,6 +15,7 @@ export default function MenuWebList(props) {
   const [modalTitle, setModalTitle] = useState(null);
   const [modalContent, setModalContent] = useState(null);
   const [listItems, setListItems] = useState([]);
+  const token = getAccessToken();
 
   useEffect(() => {
     const listItemsArray = [];
@@ -22,7 +23,7 @@ export default function MenuWebList(props) {
       listItemsArray.push({
         content: (
           <div>
-            <MenuItem item={item} />
+            <MenuItem item={item} token={token} />
           </div>
         ),
       });
@@ -31,8 +32,6 @@ export default function MenuWebList(props) {
   }, [menu]);
 
   const onSort = (sortedList, dropEvent) => {
-    const token = getAccessToken();
-
     sortedList.forEach((item) => {
       const { _id } = item.content.props.children.props.item;
       const order = item.rank;
@@ -41,6 +40,8 @@ export default function MenuWebList(props) {
 
     console.log(dropEvent);
   };
+
+  const activateMenu = () => {};
 
   return (
     <div className="menu-web-list">
@@ -55,13 +56,27 @@ export default function MenuWebList(props) {
 }
 
 function MenuItem(props) {
-  const { item } = props;
+  const { item, token } = props;
   const { Item } = List;
+
+  const checked = (e) => {
+    activateMenu(token, item._id, e)
+      .then((response) => {
+        notification["success"]({
+          message: response.message,
+        });
+      })
+      .catch((err) => {
+        notification["success"]({
+          message: err.message,
+        });
+      });
+  };
 
   return (
     <Item
       actions={[
-        <Switch defaultChecked={item.active} />,
+        <Switch defaultChecked={item.active} onChange={checked} />,
         <Button type="primary">
           <EditOutlined />
         </Button>,
