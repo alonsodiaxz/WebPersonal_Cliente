@@ -68,3 +68,26 @@ export function activateMenu(token, id, status) {
       return err.message;
     });
 }
+
+export function createMenuWeb(token, data) {
+  const url = `${BASE_PATH}/${API_VERSION}/add-menu`;
+  const params = {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  };
+
+  return fetch(url, params)
+    .then((response) => {
+      return response.json();
+    })
+    .then((result) => {
+      return result;
+    })
+    .catch((err) => {
+      return err;
+    });
+}

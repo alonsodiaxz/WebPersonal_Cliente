@@ -47,7 +47,10 @@ export default function MenuWebList(props) {
     setModalTitle("Creando nuevo menu");
     setModalContent(
       <div>
-        <AddMenuWebForm />
+        <AddMenuWebForm
+          setIsVisibleModal={setIsVisibleModal}
+          setReloadMenuWeb={setReloadMenuWeb}
+        />
       </div>
     );
   };
