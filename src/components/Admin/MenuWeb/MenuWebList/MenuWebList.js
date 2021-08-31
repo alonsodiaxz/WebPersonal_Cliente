@@ -5,6 +5,7 @@ import Modal from "../../../Modal";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { updateMenu, activateMenu } from "../../../../API/menu";
 import { getAccessToken } from "../../../../API/auth";
+import AddMenuWebForm from "../AddMenuWebForm/AddMenuWebForm";
 
 import "./MenuWebList.scss";
 const { confirm } = ModalAntd;
@@ -41,16 +42,34 @@ export default function MenuWebList(props) {
     console.log(dropEvent);
   };
 
-  const activateMenu = () => {};
+  const createMenu = () => {
+    setIsVisibleModal(true);
+    setModalTitle("Creando nuevo menu");
+    setModalContent(
+      <div>
+        <AddMenuWebForm />
+      </div>
+    );
+  };
 
   return (
     <div className="menu-web-list">
       <div className="menu-web-list__header">
-        <Button type="primary">Menu</Button>
+        <Button type="primary" onClick={createMenu}>
+          Crear Menú
+        </Button>
       </div>
       <div className="menu-web-list__items">
         <DragSortableList items={listItems} onSort={onSort} type="vertical" />
       </div>
+
+      <Modal
+        title={modalTitle}
+        isVisible={isVisibleModal}
+        setIsVisible={setIsVisibleModal}
+      >
+        {modalContent}
+      </Modal>
     </div>
   );
 }
