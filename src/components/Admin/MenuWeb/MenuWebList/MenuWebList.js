@@ -6,6 +6,7 @@ import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { updateMenu, activateMenu } from "../../../../API/menu";
 import { getAccessToken } from "../../../../API/auth";
 import AddMenuWebForm from "../AddMenuWebForm/AddMenuWebForm";
+import EditMenuWebForm from "../EditMenuWebForm/EditMenuWebForm";
 
 import "./MenuWebList.scss";
 const { confirm } = ModalAntd;
@@ -24,7 +25,13 @@ export default function MenuWebList(props) {
       listItemsArray.push({
         content: (
           <div>
-            <MenuItem item={item} token={token} />
+            <MenuItem
+              item={item}
+              token={token}
+              setIsVisibleModal={setIsVisibleModal}
+              setModalTitle={setModalTitle}
+              setModalContent={setModalContent}
+            />
           </div>
         ),
       });
@@ -78,7 +85,8 @@ export default function MenuWebList(props) {
 }
 
 function MenuItem(props) {
-  const { item, token } = props;
+  const { item, token, setIsVisibleModal, setModalContent, setModalTitle } =
+    props;
   const { Item } = List;
 
   const checked = (e) => {
@@ -95,11 +103,17 @@ function MenuItem(props) {
       });
   };
 
+  const editMenuForm = () => {
+    setIsVisibleModal(true);
+    setModalTitle("Editar Menu Web");
+    setModalContent(<EditMenuWebForm item={item} />);
+  };
+
   return (
     <Item
       actions={[
         <Switch defaultChecked={item.active} onChange={checked} />,
-        <Button type="primary">
+        <Button type="primary" onClick={editMenuForm}>
           <EditOutlined />
         </Button>,
 

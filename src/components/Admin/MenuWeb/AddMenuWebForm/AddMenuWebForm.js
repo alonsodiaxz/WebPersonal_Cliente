@@ -77,7 +77,7 @@ function AddForm(props) {
     <Form className="form-add" onSubmitCapture={onSubmit}>
       <Item>
         <Input
-          placeholder="Title"
+          placeholder="Titulo"
           prefix={({ color: "rgba(0, 0, 0, 0.25) " }, (<FontSizeOutlined />))}
           onChange={onChange}
           name="title"
