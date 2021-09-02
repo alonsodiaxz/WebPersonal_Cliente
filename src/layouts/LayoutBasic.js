@@ -1,7 +1,8 @@
 import React from "react";
-import { Layout } from "antd";
+import { Layout, Row, Col } from "antd";
 import { Route, Switch } from "react-router-dom";
 import "./LayoutBasic.scss";
+import MenuTop from "../components/Web/MenuTop/MenuTop";
 
 function LoadRoutes({ routes }) {
   const rutas = (
@@ -21,16 +22,17 @@ function LoadRoutes({ routes }) {
 
 export default function LayoutBasic(props) {
   const { routes } = props;
-  const { Content, Footer } = Layout;
+  const { Footer } = Layout;
+
   return (
-    <Layout>
-      <h2> Menu...</h2>
-      <Layout>
-        <Content>
-          <LoadRoutes routes={routes} />
-        </Content>
+    <Row>
+      <Col md={3}></Col>
+      <Col md={18}>
+        <MenuTop />
+        <LoadRoutes routes={routes} />
         <Footer> Alonso Diaz Sobrino</Footer>
-      </Layout>
-    </Layout>
+      </Col>
+      <Col md={3}></Col>
+    </Row>
   );
 }
