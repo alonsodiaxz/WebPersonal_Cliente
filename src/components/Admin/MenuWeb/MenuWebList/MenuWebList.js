@@ -3,7 +3,7 @@ import { List, Switch, Button, Modal as ModalAntd, notification } from "antd";
 import DragSortableList from "react-drag-sortable";
 import Modal from "../../../Modal";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { updateMenu, activateMenu } from "../../../../API/menu";
+import { updateMenu, activateMenu, deleteMenu } from "../../../../API/menu";
 import { getAccessToken } from "../../../../API/auth";
 import AddMenuWebForm from "../AddMenuWebForm/AddMenuWebForm";
 import EditMenuWebForm from "../EditMenuWebForm/EditMenuWebForm";
@@ -31,6 +31,7 @@ export default function MenuWebList(props) {
               setIsVisibleModal={setIsVisibleModal}
               setModalTitle={setModalTitle}
               setModalContent={setModalContent}
+              setReloadMenuWeb={setReloadMenuWeb}
             />
           </div>
         ),
@@ -45,8 +46,6 @@ export default function MenuWebList(props) {
       const order = item.rank;
       updateMenu(token, _id, { order });
     });
-
-    console.log(dropEvent);
   };
 
   const createMenu = () => {
@@ -85,8 +84,14 @@ export default function MenuWebList(props) {
 }
 
 function MenuItem(props) {
-  const { item, token, setIsVisibleModal, setModalContent, setModalTitle } =
-    props;
+  const {
+    item,
+    token,
+    setIsVisibleModal,
+    setModalContent,
+    setModalTitle,
+    setReloadMenuWeb,
+  } = props;
   const { Item } = List;
 
   const checked = (e) => {
@@ -106,7 +111,33 @@ function MenuItem(props) {
   const editMenuForm = () => {
     setIsVisibleModal(true);
     setModalTitle("Editar Menu Web");
-    setModalContent(<EditMenuWebForm item={item} />);
+    setModalContent(
+      <EditMenuWebForm
+        item={item}
+        setReloadMenuWeb={setReloadMenuWeb}
+        setIsVisibleModal={setIsVisibleModal}
+      />
+    );
+  };
+
+  const deleteMenuWeb = () => {
+    confirm({
+      title: "Eliminando Menú",
+      content: `¿Estas seguro de que quieres eliminar el menu ${item.title}`,
+      okText: "Eliminar",
+      okType: "danger",
+      cancelText: "Cancelar",
+      onOk() {
+        deleteMenu(token, item._id)
+          .then((response) => {
+            notification["success"]({ message: response.message });
+            setReloadMenuWeb(true);
+          })
+          .catch((err) => {
+            notification["error"]({ message: err.message });
+          });
+      },
+    });
   };
 
   return (
@@ -117,7 +148,7 @@ function MenuItem(props) {
           <EditOutlined />
         </Button>,
 
-        <Button type="danger">
+        <Button type="danger" onClick={deleteMenuWeb}>
           <DeleteOutlined />
         </Button>,
       ]}
