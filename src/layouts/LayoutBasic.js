@@ -25,14 +25,16 @@ export default function LayoutBasic(props) {
   const { Footer } = Layout;
 
   return (
-    <Row>
-      <Col md={3}></Col>
-      <Col md={18}>
-        <MenuTop />
-        <LoadRoutes routes={routes} />
-        <Footer> Alonso Diaz Sobrino</Footer>
-      </Col>
-      <Col md={3}></Col>
-    </Row>
+    <>
+      <Row>
+        <Col md={3}></Col>
+        <Col md={18}>
+          <MenuTop />
+        </Col>
+        <Col md={3}></Col>
+      </Row>
+      <LoadRoutes routes={routes} />
+      <Footer> Alonso Diaz Sobrino</Footer>
+    </>
   );
 }
