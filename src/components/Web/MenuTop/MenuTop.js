@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import logoAlonso from "../../../assets/img/png/LABM.png";
 import { getMenuApi } from "../../../API/menu";
 import { getAccessToken } from "../../../API/auth";
+import SocialLinks from "../SocialLinks/SocialLinks";
 
 import "./MenuTop.scss";
 
@@ -60,7 +61,7 @@ export default function MenuTop() {
       <Item className="menu-top-web__item">
         <Link to={"/admin"}> Admin</Link>
       </Item>
-      <div> Social Media</div>
+      <SocialLinks />
     </Menu>
   );
 }
