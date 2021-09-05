@@ -1,0 +1,23 @@
+@import "../../../scss/index.scss";
+
+.home-courses {
+  margin-top: 50px;
+  margin-bottom: 50px;
+
+  &__title {
+    text-align: center;
+    h2 {
+      color: $font-light;
+      font-weight: bold;
+      font-size: 30px;
+    }
+  }
+  .row-courses {
+    .ant-col {
+      padding: 15px !important;
+    }
+  }
+
+  &__card {
+  }
+}
