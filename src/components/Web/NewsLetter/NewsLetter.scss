@@ -1,0 +1,22 @@
+@import "../../../scss/index.scss";
+
+.newsletter {
+  position: relative;
+
+  h3 {
+    color: $font-light;
+  }
+
+  input {
+    height: 35px;
+    font-size: 17px;
+  }
+
+  .ant-col {
+    text-align: center;
+    .ant-btn {
+      width: 50%;
+      height: 35px;
+    }
+  }
+}
